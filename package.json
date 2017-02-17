@@ -1,0 +1,23 @@
+{
+  "name": "redteal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "cd server && npm i && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dchasepdx/redteal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/dchasepdx/redteal/issues"
+  },
+  "engines": {
+    "node": "6.8.1"
+  },
+  "homepage": "https://github.com/dchasepdx/redteal#readme"
+}
