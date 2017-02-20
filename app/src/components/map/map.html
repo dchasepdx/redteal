@@ -1,2 +1,6 @@
 <h1>hello world</h1>
-<h1>{{$ctrl.cityData}}</h1>
+<form ng-submit="$ctrl.cityMarker()">
+  <input ng-model="$ctrl.address">city, state, country
+  <button type="submit">Submit</button>
+</form>
+<div id="gMap"></div>
