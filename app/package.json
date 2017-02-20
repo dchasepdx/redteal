@@ -55,7 +55,9 @@
   },
   "dependencies": {
     "angular": "^1.6.0",
+    "angular-google-maps": "^2.4.1",
     "angular-resource": "^1.6.1",
+    "angular-simple-logger": "^0.1.7",
     "angular-ui-router": "^1.0.0-beta.3",
     "angular-ui-router-default": "0.0.6",
     "camelcase": "^4.0.0",
