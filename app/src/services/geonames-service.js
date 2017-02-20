@@ -2,9 +2,12 @@ geonamesService.$inject = ['$http', 'apiUrl'];
 
 export default function geonamesService($http, apiUrl) {
   return {
-    getCity() {
-      return $http.get(`${apiUrl}/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&username=dchasepdx&formatted=true`)
-        .then(res => res.data);
+    getEarthquakes(n, s, e, w) {
+      return $http.get(`${apiUrl}/earthquakesJSON?north=${n}&south=${s}&east=${e}&west=${w}&username=dchasepdx`)
+        .then(res => {
+          console.log('called service with these arguments',`${apiUrl}/earthquakesJSON?north=${n}&south=${s}&east=${e}&west=${w}&username=dchasepdx`);
+          return res.data;
+        });
     }
   };
 }
