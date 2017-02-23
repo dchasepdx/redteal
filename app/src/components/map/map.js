@@ -10,6 +10,9 @@ controller.$inject = ['geonamesService', '$timeout'];
 function controller(geonamesService) {
 
   this.earthquakeMarkers = [];
+  this.weatherMarkers = [];
+  this.cityMarkers = [];
+  this.earthquakeMarker;
 
   this.$onInit = () => {
     this.initialize = () => {
@@ -22,33 +25,77 @@ function controller(geonamesService) {
     google.maps.event.addDomListener(window, 'load', this.initialize);//eslint-disable-line   
   };
 
+  this.removeMarkers = (markers) => {
+    for(let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
+  };
+
+  this.addMarkers = (markerArray, marker, event, title) => {
+    for(let i = 0; i < event.length; i++) {
+        marker = new google.maps.Marker({//eslint-disable-line
+          map: this.map,
+          position: new google.maps.LatLng(event[i].lat, event[i].lng),//eslint-disable-line
+          label: title[0].toUpperCase()
+        });
+      markerArray.push(marker);
+    }
+  };
+
   this.getEarthquakes = () => {
-    geonamesService.getEarthquakes(this.n,this.s,this.e,this.w).then(earthquakes => {
+    geonamesService.getInfo('earthquakes',this.n,this.s,this.e,this.w).then(earthquakes => {
       this.earthquakes = earthquakes.earthquakes;
       if(this.earthquakes.length > 0) {
         this.error = '';
         if(this.earthquakeMarkers.length > 0) {
-          for(let i = 0; i < this.earthquakeMarkers.length; i++) {
-            this.earthquakeMarkers[i].setMap(null);
-          }
-          this.earthquakeMarkers = [];
+          this.removeMarkers(this.earthquakeMarkers);
         }
-        for(let i = 0; i < this.earthquakes.length; i++) {
-          this.earthquakeMarker = new google.maps.Marker({//eslint-disable-line
-            map: this.map,
-            position: new google.maps.LatLng(this.earthquakes[i].lat, this.earthquakes[i].lng)//eslint-disable-line
-          });
-          this.earthquakeMarkers.push(this.earthquakeMarker);
-        }
+        this.addMarkers(this.earthquakeMarkers, this.earthquakeMarker, this.earthquakes, 'earthquake');
       } else {
         this.error = 'No earthquakes in region';
       }
     })
-      .catch(() => {
-        console.log('wtf');
+      .catch((err) => {
+        console.log(err);
       });
   };
 
+  this.getWeather = () => {
+    geonamesService.getInfo('weather',this.n, this.s, this.e, this.w).then(weather => {
+      this.weather = weather.weatherObservations;
+      if(this.weather.length > 0) {
+        this.error = '';
+        if(this.weatherMarkers.length > 0) {
+          this.removeMarkers(this.weatherMarkers);
+        }
+        this.addMarkers(this.weatherMarkers, this.weatherMarker, this.weather, 'weather');
+      } else {
+        this.error = 'No weather in region';
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  };
+
+  this.getCities = () => {
+    geonamesService.getInfo('cities', this.n, this.s, this.e, this.w).then(cities => {
+      this.cities = cities.geonames;
+      if(this.cities.length > 0) {
+        this.error = '';
+        if(this.cityMarkers.length > 0) {
+          this.removeMarkers(this.cityMarkers);
+        }
+        this.addMarkers(this.cityMarkers, this.cityMarker, this.cities, 'cities');
+      } else {
+        this.error = 'No cities in region';
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  };
 
   this.cityMarker = () => {
     let address = this.address;
@@ -57,13 +104,8 @@ function controller(geonamesService) {
         let bounds = results[0].geometry.bounds;
         this.n = bounds.f.b;
         this.s = bounds.f.f;
-        this.e = bounds.b.b;
-        this.w = bounds.b.f;
-
-        // -122.83699519999999 b.b
-        // -122.4718489 b.f
-        // 45.654424 f.b
-        // 45.432393 f.f
+        this.e = bounds.b.f;
+        this.w = bounds.b.b;
 
 
         if(this.marker) {
@@ -83,7 +125,6 @@ function controller(geonamesService) {
           map: this.map,
           bounds: results[0].geometry.bounds
         });
-        this.getEarthquakes();
       } else {
         this.error = ('Geocode was not successful for the following reason: ' + status);
       }
