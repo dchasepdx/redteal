@@ -4,4 +4,7 @@
   <button type="submit">Submit</button>
 </form>
 <p ng-if="$ctrl.error" class="error">{{$ctrl.error}}</p>
+<button ng-click="$ctrl.getWeather()">weather</button>
+<button ng-click="$ctrl.getEarthquakes()">earthquakes</button>
+<button ng-click="$ctrl.getCities()">cities</button>
 <div id="gMap"></div>
