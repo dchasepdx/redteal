@@ -3,6 +3,5 @@
   <input ng-model="$ctrl.address">city, state, country
   <button type="submit">Submit</button>
 </form>
-<p>{{$ctrl.n}},{{$ctrl.s}},{{$ctrl.e}},{{$ctrl.w}}</p>
-<p>{{$ctrl.earthquakes}}</p>
+<p ng-if="$ctrl.error" class="error">{{$ctrl.error}}</p>
 <div id="gMap"></div>
