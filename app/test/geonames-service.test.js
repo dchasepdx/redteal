@@ -22,7 +22,7 @@ describe('geonames service', () => {
       .expectGET('http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&username=dchasepdx')
       .respond(data);
 
-    geonamesService.getCity()
+    geonamesService.getInfo('cities', 44.1, -9.9, -22.4, 55.2)
       .then(cityData => {
         assert.deepEqual(cityData, data);
         done();
