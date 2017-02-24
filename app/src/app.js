@@ -4,7 +4,7 @@ import services from './services';
 import 'normalize.css';
 import './scss/main.scss';
 
-const app = angular.module('redteal', [
+const app = angular.module('map-project', [
   components,
   services,
 

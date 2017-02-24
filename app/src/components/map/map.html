@@ -1,10 +1,19 @@
-<h1>hello world</h1>
-<form ng-submit="$ctrl.cityMarker()">
-  <input ng-model="$ctrl.address">city, state, country
-  <button type="submit">Submit</button>
-</form>
-<p ng-if="$ctrl.error" class="error">{{$ctrl.error}}</p>
-<button ng-click="$ctrl.getWeather()">weather</button>
-<button ng-click="$ctrl.getEarthquakes()">earthquakes</button>
-<button ng-click="$ctrl.getCities()">cities</button>
-<div id="gMap"></div>
+<h1>map project</h1>
+<div class="map-container">
+  <form ng-submit="$ctrl.cityMarker()">
+    <input ng-model="$ctrl.address" placeholder="search for places">
+    <button class="btn btn-blue" type="submit">Submit</button>
+  </form>
+  <p ng-if="$ctrl.error" class="error">{{$ctrl.error}}</p>
+  <button class="btn btn-purp" ng-click="$ctrl.getWeather()">weather</button>
+  <button class="btn btn-purp" ng-click="$ctrl.getEarthquakes()">earthquakes</button>
+  <button class="btn btn-purp" ng-click="$ctrl.getCities()">cities</button>
+  <div id="gMap"></div>
+  <input ng-model="params" placeholder="search the data">
+  <ul>
+    <li ng-repeat="e in $ctrl.earthquakes | filter:params">date:{{e.datetime}} magnitude:{{e.magnitude}} depth:{{e.depth}}</li>
+  </ul>
+  <ul>
+    <li ng-repeat="c in $ctrl.cities | filter:params">name:{{c.toponymName}} country:{{c.countrycode}}</li>
+  </ul>
+</div>

@@ -2,7 +2,81 @@ html, body {
         height: 100%;
         margin: 0;
         padding: 0;
+        background-color: #FFF1B8
 }
+.map-container {
+        width: 75%;
+        margin: 0 auto;
+}
+
 #gMap {
         height: 480px;
+        width: 100%;
+        border: 3px solid black;
+        padding: 5px;
+}
+
+@mixin button-bg($bg) {
+  background: $bg;
+  &:hover {
+    background:darken($bg,8%);
+    transition: all 0.3s ease;
+  }
+  &:active {
+    background:darken($bg,25%);
+  } 
+}
+
+.btn {
+ color:#FFF1B8;
+ text-decoration:none;
+ border: none;
+ padding:5px 10px;
+ border-radius:3px;
+ font-size:2em;
+}
+
+.btn-purp {
+   @include button-bg(#c42af0);
+}
+
+.btn-blue {
+   @include button-bg(#3498db);
+}
+
+.btn-yellow{
+   @include button-bg(#f1c40f);
+}
+
+.btn-red {
+   @include button-bg(#e74c3c);
+}
+
+input {
+  display: block;
+  margin: 0;
+  width: 100%;
+  font-family: sans-serif;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  padding: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+  background-color: #FFF1B8
+  
+}
+input:focus {
+  outline: none;
+  border-bottom: solid 2px #969696;
+}
+
+.style-4 input[type="text"] {
+
+}
+.style-4 input[type="text"]:focus,
+.style-4 input[type="text"].focus {
+  border-bottom: solid 2px #969696;
 }
