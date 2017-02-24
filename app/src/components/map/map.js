@@ -12,7 +12,12 @@ function controller(geonamesService) {
   this.earthquakeMarkers = [];
   this.weatherMarkers = [];
   this.cityMarkers = [];
-  this.earthquakeMarker;
+  this.quakeProps = ['datetime', 'magnitude', 'depth'];
+  this.weatherProps = ['datetime', 'clouds', 'dewPoint', 'temperature', 'humidity', 'stationName', 'weatherCondition', 'windSpeed'];
+  this.cityProps = ['toponymName', 'countrycode', 'fcodeName', 'wikipedia'];
+  this.searchData = [];
+
+  
 
   this.$onInit = () => {
     this.initialize = () => {
@@ -32,14 +37,27 @@ function controller(geonamesService) {
     markers = [];
   };
 
-  this.addMarkers = (markerArray, marker, event, title) => {
+  this.addMarkers = (markerArray, marker, event, title, ...prop) => {
+
+    this.infoWindow = new google.maps.InfoWindow()//eslint-disable-line
     for(let i = 0; i < event.length; i++) {
-        marker = new google.maps.Marker({//eslint-disable-line
-          map: this.map,
-          position: new google.maps.LatLng(event[i].lat, event[i].lng),//eslint-disable-line
-          label: title[0].toUpperCase()
-        });
+      marker = new google.maps.Marker({//eslint-disable-line
+        map: this.map,
+        position: new google.maps.LatLng(event[i].lat, event[i].lng),//eslint-disable-line
+        label: title[0].toUpperCase()
+      });
+      google.maps.event.addListener(marker, 'click', ((marker, i, event, prop) => {//eslint-disable-line
+        return () => {
+          let contentString = '';
+          for(let j = 0; j < prop.length; j++) {
+            contentString += `${prop[j]}: ${JSON.stringify(event[i][prop[j]])}<br>`;
+          }
+          this.infoWindow.setContent(contentString);
+          this.infoWindow.open(this.map, marker);
+        };
+      })(marker, i, event, prop));
       markerArray.push(marker);
+
     }
   };
 
@@ -51,7 +69,7 @@ function controller(geonamesService) {
         if(this.earthquakeMarkers.length > 0) {
           this.removeMarkers(this.earthquakeMarkers);
         }
-        this.addMarkers(this.earthquakeMarkers, this.earthquakeMarker, this.earthquakes, 'earthquake');
+        this.addMarkers(this.earthquakeMarkers, this.earthquakeMarker, this.earthquakes, 'earthquake', ...this.quakeProps);
       } else {
         this.error = 'No earthquakes in region';
       }
@@ -69,7 +87,7 @@ function controller(geonamesService) {
         if(this.weatherMarkers.length > 0) {
           this.removeMarkers(this.weatherMarkers);
         }
-        this.addMarkers(this.weatherMarkers, this.weatherMarker, this.weather, 'weather');
+        this.addMarkers(this.weatherMarkers, this.weatherMarker, this.weather, 'weather', ...this.weatherProps);
       } else {
         this.error = 'No weather in region';
       }
@@ -87,7 +105,7 @@ function controller(geonamesService) {
         if(this.cityMarkers.length > 0) {
           this.removeMarkers(this.cityMarkers);
         }
-        this.addMarkers(this.cityMarkers, this.cityMarker, this.cities, 'cities');
+        this.addMarkers(this.cityMarkers, this.cityMarker, this.cities, 'cities', ...this.cityProps);
       } else {
         this.error = 'No cities in region';
       }
@@ -114,6 +132,11 @@ function controller(geonamesService) {
         if(this.rectangle) {
           this.rectangle.setMap(null);
         }
+
+        this.removeMarkers(this.earthquakeMarkers);
+        this.removeMarkers(this.weatherMarkers);
+        this.removeMarkers(this.cityMarkers);
+
         this.map.setCenter(results[0].geometry.location);
         this.marker = new google.maps.Marker({//eslint-disable-line
           map: this.map,
